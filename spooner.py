@@ -24,8 +24,8 @@ def generate(word):
     if word[wordsplit:] == inputword[inputwordsplit:]: return []
     if word[:wordsplit] == inputword[:inputwordsplit]: return []
 
-    spoon_1 = '%s%s' % (word[:wordsplit], inputword[inputwordsplit:])
-    spoon_2 = '%s%s' % (inputword[:inputwordsplit], word[wordsplit:])
+    spoon_1 = word[:wordsplit] + inputword[inputwordsplit:]
+    spoon_2 = inputword[:inputwordsplit] + word[wordsplit:]
 
     return [spoon_1, spoon_2]
 
@@ -37,7 +37,7 @@ def spoonit(word):
     if spoonset[0] not in words: return False
     if spoonset[1] not in words: return False
 
-    return '%s %s' % (spoonset[0], spoonset[1])
+    return spoonset[0] + ' ' + spoonset[1]
 
 
 if len(sys.argv) < 2:

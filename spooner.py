@@ -1,46 +1,51 @@
 import sys
 
+
+with open('/usr/share/dict/words') as fp:
+    words = set(line.strip() for line in fp.readlines() if line.islower() and len(line.strip()) > 3)
+
+
+def splitter(word):
+    if word[:2] == 'qu': return 2
+    vowelpos = [char in "aeiouy" for char in word].index(True)
+    if not vowelpos:
+        if not any(char in "aeiouy" for char in word[1:]): return 0
+        vowelpos = [char in "aeiouy" for char in word[1:]].index(True)
+
+    return vowelpos
+
+
+def generate(word):
+    if not any(char in "aeiou" for char in word): return []
+
+    wordsplit = splitter(word)
+    if not wordsplit: return []
+
+    if word[wordsplit:] == inputword[inputwordsplit:]: return []
+    if word[:wordsplit] == inputword[:inputwordsplit]: return []
+
+    spoon_1 = '%s%s' % (word[:wordsplit], inputword[inputwordsplit:])
+    spoon_2 = '%s%s' % (inputword[:inputwordsplit], word[wordsplit:])
+
+    return [spoon_1, spoon_2]
+
+
+def spoonit(word):
+    spoonset = generate(word)
+
+    if not spoonset: return False
+    if spoonset[0] not in words: return False
+    if spoonset[1] not in words: return False
+
+    return '%s %s' % (spoonset[0], spoonset[1])
+
+
 if len(sys.argv) < 2:
     print 'Spooner what?'
     sys.exit()
 
-with open('/usr/share/dict/words') as fp:
-    words = set(line.strip() for line in fp.readlines() if line.islower())
-
-def isvowel(char):
-    return True if "aeiouy".count(char) >= 1 else False
-
 inputword = sys.argv[1]
-inputwordsplit = [isvowel(char) for char in inputword].index(True)
-if inputword[:2] == 'qu':
-    inputwordsplit = 2
-
-def generate(word):
-
-    if len(word) < 3: return False
-
-    wordsplit = [isvowel(char) for char in word]
-
-    if True not in wordsplit: return False
-
-    wordsplit = wordsplit.index(True)
-
-    if word[:2] == 'qu':
-        wordsplit = 2
-
-    if word[wordsplit:] == inputword[inputwordsplit:]: return False
-    if word[:wordsplit] == inputword[:inputwordsplit]: return False
-
-    spoon_1 = ''.join([word[:wordsplit], inputword[inputwordsplit:]])
-    spoon_2 = ''.join([inputword[:inputwordsplit], word[wordsplit:]])
-    return [spoon_1, spoon_2]
-
-def spoonit(word):
-    spoonset = generate(word)
-    if not spoonset: return False
-    if spoonset[0] not in words: return False
-    if spoonset[1] not in words: return False
-    return ' '.join([spoonset[0], spoonset[1]])
+inputwordsplit = splitter(inputword) 
 
 spoons = [spoonit(w) for w in words]
 

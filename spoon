@@ -1,0 +1,9 @@
+#!/bin/bash
+
+python /usr/local/bin/spooner.py $1 > $1.spoons
+WHITE='\033[0;37m'
+YELLOW='\033[0;33m'
+
+count=$(cat $1.spoons | wc -l | tr -d '[[:space:]]')
+echo -e "${WHITE}Wrote ${YELLOW}$count ${WHITE}spoonerisms to $1.spoons"
+
